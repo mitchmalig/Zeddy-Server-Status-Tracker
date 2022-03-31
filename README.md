@@ -5,7 +5,7 @@ Current bot used for tracking and displaying Zeddy Zombie Escape player count an
 
 ## Credits
 - [Ramzi-Sah](https://github.com/Ramzi-Sah) for creating the original bot
-- [Soulkobk#3450](https://discord.com/channels/730060387679993916/731141660263841902/958930646921793546) for fixing the player connection times
+- [Soulkobk](https://github.com/soulkobk) for fixing the player connection times
 
 ## Changes over Ramzi-Sah's Bot
 - Replaced the `webServerHost` and `webServerPort` with `ServerBanner` option since the current player graph implementation is broken
