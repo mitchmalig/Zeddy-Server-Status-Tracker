@@ -1,6 +1,7 @@
 /*
-	Author: Ramzi Sah#2992 (Reworked and Edited by koen#4977)
-	Desription: Main bot code
+	Author: Ramzi Sah#2992
+	Desription:
+		main bot code
 */
 
 // read configs
@@ -220,10 +221,9 @@ function generateStatusEmbed() {
 	let embed = new MessageEmbed();
 
 	// set embed name and logo
-	embed.setAuthor({
-		name: config[`server_name`],
-		iconURL: config[`server_logo`]
-	});	
+	// embed.setAuthor(config["server_name"], config["server_logo"]);
+	embed.setAuthor({ name: '', iconURL: '', url: '' })
+	
 	// set embed updated time
 	tic = !tic;
 	let ticEmojy = tic ? "⚪" : "⚫";
@@ -233,9 +233,7 @@ function generateStatusEmbed() {
 	updatedTime.setHours(updatedTime.getHours() + config["timezone"][0] - 1);
 	updatedTime.setMinutes(updatedTime.getMinutes() + config["timezone"][1]);
 
-	embed.setFooter({
-		text: ticEmojy + ' ' + "Last Update" + ': ' + updatedTime.toLocaleTimeString('en-US', {hour12: !config["format24h"], month: 'short', day: 'numeric', hour: "numeric", minute: "numeric"})
-	});
+	embed.setFooter({ text: ticEmojy + ' ' + "Last Update" + ': ' + updatedTime.toLocaleTimeString('en-US', {hour12: !config["format24h"], month: 'short', day: 'numeric', hour: "numeric", minute: "numeric"}), iconURL: 'https://i.imgur.com/AfFp7pu.png' });
 	
 	try {
 		return gamedig.query({
@@ -252,7 +250,8 @@ function generateStatusEmbed() {
 
 			//-----------------------------------------------------------------------------------------------
 			// set server name
-			let serverName = config["server_name"];
+			// let serverName = config["server_name"];
+			let serverName = state.name; // get servername from gamedig
 			
 			// refactor server name
 			for (let i = 0; i < serverName.length; i++) {
@@ -267,7 +266,7 @@ function generateStatusEmbed() {
 			
 			// server name field
 			embed.addField("Server Name" + ' :', serverName);
-
+			// embed.addField('\u200B', serverName);
 			//-----------------------------------------------------------------------------------------------
 			// basic server info
 			if (!config["minimal"]) {
@@ -281,21 +280,21 @@ function generateStatusEmbed() {
 			};
 
 			embed.addField("Status" + ' :', "✅ " + "Online", true);
-			embed.addField("Online Players" + ' :', state.players.length + " / " + state.maxplayers, true);
+			embed.addField("Online Players" + ' :', state.players.length + "/" + state.maxplayers, true);
 			embed.addField('\u200B', '\u200B', true);
-
+			
 			//-----------------------------------------------------------------------------------------------
 			// player list
 			if (config["server_enable_playerlist"] && state.players.length > 0) {
 				// recover game data
 				let dataKeys = Object.keys(state.players[0]);
-
+				
 				// set name as first
 				if (dataKeys.includes('name')) {
 					dataKeys = dataKeys.filter(e => e !== 'name');
 					dataKeys.splice(0, 0, 'name');
 				};
-
+				
 				// remove some unwanted data
 				dataKeys = dataKeys.filter(e => 
 					e !== 'frags' && 
@@ -304,14 +303,15 @@ function generateStatusEmbed() {
 					e !== 'id' && 
 					e !== 'team' &&
 					e !== 'squad' &&
-					e !== 'raw' &&
+					// e !== 'raw' && // need to parse raw data, time and score
 					e !== 'skin'
 				);
 				
-				if (!config["server_enable_graph"] && dataKeys.length > 0)
-					embed.addField('\u200B', '▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄');
+				// declare field label
+				let field_label = "";
 				
 				for (let j = 0; j < dataKeys.length && j < 2; j++) {
+
 					// check if data key empty
 					if (dataKeys[j] == "") {
 						dataKeys[j] = "\u200B";
@@ -320,38 +320,57 @@ function generateStatusEmbed() {
 					let player_datas = "```\n";
 					for (let i = 0; i < state.players.length; i++) {
 						// break if too many players, prevent discord message overflood
-						if (i + 1 > 64) {
+						if (i + 1 > 50) {
 							if (j == 0) player_datas += "and " + (state.players.length - 50) + " others...";
 							else player_datas += "...";
-
 							break;
 						};
 						
-						// set player data
 						if (state.players[i][dataKeys[j]] != undefined) {
-							let player_data = state.players[i][dataKeys[j]].toString();
-							if (player_data == "") {
-								player_data = "-";
-							};
+							let player_data = null;
+							let process_time = false;
 							
-							// handle discord markdown strings
-							player_data = player_data.replace(/_/g, " ");
-							for (let k = 0; k < player_data.length; k++) {
-								if (player_data[k] == "^") {
-									player_data = player_data.slice(0, k) + " " + player_data.slice(k+2);
+							// Player name field
+							if (typeof state.players[i][dataKeys[j]] == 'string') {
+								process_time = false;
+								field_label = "Name";
+								player_data = state.players[i][dataKeys[j]].toString();
+								if (player_data == "") {
+									player_data = "-";
 								};
 							};
 							
-							if (dataKeys[j] == "time") {
-								let date = new Date(player_data * 1000);
-								player_datas += ("0" + (date.getHours() - 1)).substr(-2) + ':' + ("0" + date.getMinutes()).substr(-2) + ':' + ("0" + date.getSeconds()).substr(-2);
+							// Player time field
+							if (state.players[i][dataKeys[j]] != null && typeof state.players[i][dataKeys[j]] == 'object') {
+								process_time = true;
+								field_label = "Time";
+								player_data = state.players[i][dataKeys[j]].time;
+								if (player_data == undefined) {
+									player_data = 0;
+								};
+							};
+							
+							// process the time or name
+							if (process_time == true) {
+								let date = new Date(player_data * 1000).toISOString().substr(11,8).split(":");
+								date = date[0] + ":" + date[1] + ":" + date[2];
+								player_datas += date;
 							} else {
+								player_data = player_data.replace(/_/g, " ");
+								for (let k = 0; k < player_data.length; k++) {
+									if (player_data[k] == "^") {
+										player_data = player_data.slice(0, k) + " " + player_data.slice(k+2);
+									};
+								};
 								// handle very long strings
-								player_data = (player_data.length > 15) ? player_data.substring(0, 15 - 3) + "..." : player_data;
-								
+								player_data = (player_data.length > 24) ? player_data.substring(0, 24 - 3) + "..." : player_data;
 								let index = i + 1 > 9 ? i + 1 : "0" + (i + 1);
-								player_datas += j == 0 ? index +  " - " + player_data : player_data;
-								
+								// new config entry for adding numbers to beginning of name list
+								if (config["server_enable_numbers"]) {
+									player_datas += j == 0 ? index +  " - " + player_data : player_data;
+								} else {
+									player_datas += player_data;
+								};
 								if (dataKeys[j] == "ping") player_datas += " ms";
 							};
 						};
@@ -360,22 +379,22 @@ function generateStatusEmbed() {
 					};
 					player_datas += "```";
 					dataKeys[j] = dataKeys[j].charAt(0).toUpperCase() + dataKeys[j].slice(1);
-					embed.addField(dataKeys[j] + ' :', player_datas, true);
+					embed.addField(field_label + ' :', player_datas, true);
 				};
 			};
 			
 			// set bot activity
-			client.user.setActivity("✅ Server is Online: " + state.players.length + "/" + state.maxplayers, { type: 'WATCHING' });
+			client.user.setActivity("✅ Online: " + state.players.length + "/" + state.maxplayers, { type: 'WATCHING' });
 
 			// add graph data
 			graphDataPush(updatedTime, state.players.length);
 
 			// set graph image
-			if (config["server_enable_graph"])
+			if (config["server_enable_graph"]) {
 				embed.setImage(
 					config["ServerBanner"] + "?id=" + Date.now()
-					//"http://" + config["webServerHost"] + ":" + config["webServerPort"] + "/" + 'graph_' + instanceId + '.png' + "?id=" + Date.now()
 				);
+			};
 
 			return embed;
 		}).catch(function(error) {
@@ -385,7 +404,7 @@ function generateStatusEmbed() {
 	
 			// offline status message
 			embed.setColor('#ff0000');
-			embed.setTitle('❌ ' + "Server is Offline" + '.');
+			embed.setTitle('❌ ' + "Server Offline" + '.');
 
 			// add graph data
 			graphDataPush(updatedTime, 0);
@@ -400,7 +419,7 @@ function generateStatusEmbed() {
 		
 		// offline status message
 		embed.setColor('#ff0000');
-		embed.setTitle('❌ ' + "Server is Offline" + '.');
+		embed.setTitle('❌ ' + "Server Offline" + '.');
 
 		// add graph data
 		graphDataPush(updatedTime, 0);
