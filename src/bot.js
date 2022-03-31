@@ -1,7 +1,6 @@
 /*
-	Author: Ramzi Sah#2992
-	Desription:
-		main bot code
+	Author: Ramzi Sah#2992 (Reworked and Edited by koen#4977)
+	Desription: Main bot code
 */
 
 // read configs
