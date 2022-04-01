@@ -20,7 +20,8 @@
 			"steam_btn" : true,
 			"minimal" : false,
 			"server_enable_playerlist" : true,
-			"server_enable_banner" : true
+			"server_enable_graph" : true,
+			"server_enable_numbers" : false
 		}
 	]
 }
