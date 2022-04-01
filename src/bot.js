@@ -320,7 +320,7 @@ function generateStatusEmbed() {
 					let player_datas = "```\n";
 					for (let i = 0; i < state.players.length; i++) {
 						// break if too many players, prevent discord message overflood
-						if (i + 1 > 50) {
+						if (i + 1 > 64) {
 							if (j == 0) player_datas += "and " + (state.players.length - 50) + " others...";
 							else player_datas += "...";
 							break;
