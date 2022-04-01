@@ -106,17 +106,17 @@ client.on('ready', async () => {
 // create/get last status message
 async function createStatusMessage(statusChannel) {
 	// delete old messages except the last one
-	await clearOldMessages(statusChannel, 1);
+	//await clearOldMessages(statusChannel, 1);
 	
 	// get last message
-	let statusMessage = await getLastMessage(statusChannel);
-	if (statusMessage != undefined) {
+	//let statusMessage = await getLastMessage(statusChannel);
+	//if (statusMessage != undefined) {
 		// return last message if exists
-		return statusMessage;
-	};
+		//return statusMessage;
+	//};
 	
 	// delete all messages
-	await clearOldMessages(statusChannel, 0);
+	//await clearOldMessages(statusChannel, 0);
 	
 	// create new message
 	let embed = new MessageEmbed();
@@ -251,7 +251,8 @@ function generateStatusEmbed() {
 			//-----------------------------------------------------------------------------------------------
 			// set server name
 			// let serverName = config["server_name"];
-			let serverName = state.name; // get servername from gamedig
+			// get servername from gamedig
+			let serverName = state.name;
 			
 			// refactor server name
 			for (let i = 0; i < serverName.length; i++) {
@@ -311,7 +312,6 @@ function generateStatusEmbed() {
 				let field_label = "";
 				
 				for (let j = 0; j < dataKeys.length && j < 2; j++) {
-
 					// check if data key empty
 					if (dataKeys[j] == "") {
 						dataKeys[j] = "\u200B";
@@ -325,6 +325,7 @@ function generateStatusEmbed() {
 							else player_datas += "...";
 							break;
 						};
+						// set player data
 						
 						if (state.players[i][dataKeys[j]] != undefined) {
 							let player_data = null;
