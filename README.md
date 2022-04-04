@@ -1,4 +1,4 @@
-# Zeddys Server Status Tracker
+# Zeddy Server Status Tracker
 
 ## Requirements
 
@@ -41,7 +41,7 @@ npm run start
 ## License
 
 ```
-Zeddys Server Status Tracker
+Zeddy Server Status Tracker
 Copyright (C) 2022  Zeddy Gaming
 
 This program is free software: you can redistribute it and/or modify
