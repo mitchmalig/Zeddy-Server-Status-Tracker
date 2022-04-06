@@ -1,17 +1,59 @@
 # Zeddy Server Status Tracker
-Current bot used for tracking and displaying Zeddy Zombie Escape player count and map information. This is a fork of [Ramzi-Sah's Game Status Bot](https://github.com/Ramzi-Sah/game-status-discordbot-selfhosted). The reasons why I did not directly fork the original repository was because I will also be uploading secrets and the actual live bot code on GitHub as well. The `.gitignore` file shows that I already have a private folder that contains the live bot code.
 
-**THIS FORK IS GEARED TOWARDS CS:GO Zombie Escape SERVERS**
+## Requirements
+
+-   Node.js 16
+
+## Usage
+
+```bash
+# Install dependencies
+npm install
+
+# Compile source code
+npm run build
+
+# Start the bot
+npm run start
+```
+
+## .env
+
+| Variable        | Description             |
+| --------------- | ----------------------- |
+| CSGO_PORT       | CS:GO Server Port       |
+| CSGO_HOST       | CS:GO Server IP Address |
+| DISCORD_CHANNEL | Discord Channel ID      |
+| DISCORD_TOKEN   | Discord Bot Token       |
 
 ## Credits
-- [Ramzi-Sah](https://github.com/Ramzi-Sah) for creating the original bot
-- [Soulkobk](https://github.com/soulkobk) for fixing the player connection times
 
-## Changes over Ramzi-Sah's Bot
-- Replaced the `webServerHost` and `webServerPort` with `ServerBanner` option since the current player graph implementation is broken
-- Fixed the player connection time display issue
-- Uses server banners from website and embeds to the bot message (eg. [Battlemetrics](https://www.battlemetrics.com/servers) or [GameTracker](https://www.gametracker.com/search/csgo/)) [Example Screenshot](https://ibb.co/0hydK2m)
+- [Ramzi-Sah](https://github.com/Ramzi-Sah) for creating the original bot.
+- [Soulkobk](https://github.com/soulkobk) for fixing the player connection times.
+- [Koen](https://github.com/TheProKoen) for embedding battlemetrics and gametracker banners.
+- [Freeman](https://github.com/mitchmalig) for code refactoring.
 
-## To-Do List
-- Fix the player graph and return to the old player graph display method
-- Add Map Stage Tracking
+## To-Do
+
+- Map Stage Tracking.
+- Player Population Graph Visualisation.
+
+## License
+
+```
+Zeddy Server Status Tracker
+Copyright (C) 2022  Zeddy Gaming
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+```

@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "outDir": "build",
+        "target": "es2021",
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "noPropertyAccessFromIndexSignature": true
+    },
+    "include": ["src", ".eslintrc.js"],
+    "exclude": ["node_modules"]
+}
